@@ -15,6 +15,15 @@ public class User {
     private String username;
     private String password;
     private String displayname;
+    private Employee e;
+
+    public Employee getE() {
+        return e;
+    }
+
+    public void setE(Employee e) {
+        this.e = e;
+    }
 
     private ArrayList<Role> roles = new ArrayList<>();
 
@@ -24,14 +33,6 @@ public class User {
 
     public void setRoles(ArrayList<Role> roles) {
         this.roles = roles;
-    }
-
-    public String getDisplayname() {
-        return displayname;
-    }
-
-    public void setDisplayname(String displayname) {
-        this.displayname = displayname;
     }
 
     public String getUsername() {
@@ -48,6 +49,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getDisplayname() {
+        return displayname;
+    }
+
+    public void setDisplayname(String displayname) {
+        this.displayname = displayname;
     }
 
 }

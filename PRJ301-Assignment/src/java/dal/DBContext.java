@@ -7,6 +7,7 @@ package dal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author NITRO 5
  */
-public abstract class DBContext {
+public abstract class DBContext<T> {
 
     protected Connection connection;
 
@@ -31,5 +32,15 @@ public abstract class DBContext {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public abstract ArrayList<T> list();
+
+    public abstract T get(int id);
+
+    public abstract void insert(T model);
+
+    public abstract void update(T model);
+
+    public abstract void delete(T model);
 
 }
