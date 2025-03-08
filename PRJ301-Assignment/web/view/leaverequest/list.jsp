@@ -16,38 +16,79 @@
                 background: linear-gradient(135deg, #ff9a9e, #fad0c4);
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
                 align-items: center;
                 height: 100vh;
                 margin: 0;
+                padding: 20px;
             }
 
             h1 {
                 color: #333;
                 margin-bottom: 20px;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            .button-container {
+                width: 80%;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 10px;
+            }
+
+            .create-button {
+                background: #28a745;
+                color: white;
+                padding: 12px 25px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background 0.3s, transform 0.2s;
+                text-decoration: none;
+                font-size: 16px;
+                font-weight: bold;
+                align-self: flex-start;
+                margin-bottom: 15px;
+                margin-left: 10%; /* Căn chỉnh theo bảng */
+            }
+
+            .create-button:hover {
+                background: #218838;
+                transform: scale(1.05);
             }
 
             form {
-                margin-bottom: 20px;
                 width: 80%;
                 text-align: left;
+                margin-bottom: 30px;
+                align-self: flex-start;
+                margin-left: 10%; /* Căn chỉnh theo bảng */
             }
 
             select {
                 padding: 10px;
                 border-radius: 5px;
                 border: 1px solid #ccc;
-                width: 150px;
+                width: 180px;
                 display: block;
+                font-size: 16px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+
+            select:hover {
+                border-color: #888;
             }
 
             table {
                 width: 80%;
                 border-collapse: collapse;
                 background: white;
-                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+                box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
                 border-radius: 10px;
                 overflow: hidden;
+                margin-top: 30px;
             }
 
             table, th, td {
@@ -55,26 +96,30 @@
             }
 
             th, td {
-                padding: 12px;
+                padding: 14px;
                 text-align: center;
+                font-size: 16px;
             }
 
             th {
                 background: #ff758c;
                 color: white;
+                font-weight: bold;
+                text-transform: uppercase;
             }
 
             tr:nth-child(even) {
-                background: #f2f2f2;
+                background: #f8f8f8;
             }
 
             tr:hover {
                 background: #ffccd5;
-                transition: 0.3s;
+                transition: background 0.3s;
             }
         </style>
     </head>
     <body>
+        <a href="create" class="create-button">+ Create Application</a> 
         <form id="search" action="findbydept" method="GET">
             <select name="did" onchange="document.getElementById('search').submit();">
                 <option value="-1">---Select All---</option>

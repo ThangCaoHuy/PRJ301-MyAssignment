@@ -10,9 +10,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-
         <style>
-
             body {
                 font-family: Arial, sans-serif;
                 background: linear-gradient(135deg, #43cea2, #185a9d);
@@ -69,7 +67,6 @@
             input[type="submit"]:hover {
                 background: #185a9d;
             }
-
         </style>
     </head>
     <body>
