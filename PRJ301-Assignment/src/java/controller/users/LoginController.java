@@ -4,6 +4,7 @@
  */
 package controller.users;
 
+import dal.EmployeeDBContext;
 import dal.UserDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Employee;
 import model.Feature;
 import model.Role;
 import model.User;
@@ -39,30 +41,24 @@ public class LoginController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        String param_user = request.getParameter("username");
-        String param_pass = request.getParameter("password");
-
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
         UserDBContext db = new UserDBContext();
-        User u = db.getWithRoles(param_user, param_pass);
+        User user = db.get(username, password);
 
-        if (u != null) {
-            response.setContentType("text/html;charset=UTF-8");
-            response.getWriter().println("Hello " + u.getDisplayname() + "<br/>");
-            for (Role role : u.getRoles()) {
-                response.getWriter().println(role.getName() + "<br/>");
-                for (Feature feature : role.getFeatures()) {
-                    response.getWriter().println("->" + feature.getUrl() + "<br/>");
-                }
-            }
+        if (user != null) {
+            EmployeeDBContext edb = new EmployeeDBContext();
+            Employee profile = edb.get(user.getE().getId());
+            user.setE(profile);
 
-            HttpSession session = request.getSession();
-            session.setAttribute("user", u);
-
+            HttpSession session = req.getSession();
+            session.setAttribute("user", user);
+            resp.sendRedirect("welcome");
         } else {
-            response.getWriter().println("login failed!");
+            resp.getWriter().println("login failed!");
         }
     }
 
