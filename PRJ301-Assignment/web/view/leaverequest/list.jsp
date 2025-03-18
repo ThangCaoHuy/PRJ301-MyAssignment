@@ -9,7 +9,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>      
+        <title>JSP Page</title>
+        <script src="../js/control/pagger.js" type="text/javascript"></script>
+        <link href="../css/control/pagger.css" rel="stylesheet" type="text/css"/>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -132,6 +134,7 @@
                 </c:forEach>
             </select>
         </form>
+        <div id="toppagger" class="pagger"></div>
         <table border="1px">
             <tr>
                 <td>Id</td>
@@ -156,5 +159,10 @@
                 </tr>
             </c:forEach>
         </table>
+        <div id="botpagger" class="pagger"></div>
+        <script>
+            renderPagger('toppagger',${requestScope.pageindex}, 2,${requestScope.totalpage});
+            renderPagger('botpagger',${requestScope.pageindex}, 2,${requestScope.totalpage});
+        </script>
     </body>
 </html>

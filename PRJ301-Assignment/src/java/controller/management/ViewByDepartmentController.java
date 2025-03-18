@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.leaverequest;
+package controller.management;
 
 import controller.auth.RequiredAuthenticationBaseController;
-import dal.LeaveRequestDBContext;
 import dal.DepartmentDBContext;
+import dal.LeaveRequestDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -21,7 +21,7 @@ import model.User;
  *
  * @author NITRO 5
  */
-public class ViewLeaveRequestByDepartmentController extends RequiredAuthenticationBaseController {
+public class ViewByDepartmentController extends RequiredAuthenticationBaseController {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -55,19 +55,30 @@ public class ViewLeaveRequestByDepartmentController extends RequiredAuthenticati
         request.setAttribute("totalpage", totalpage);
         request.setAttribute("leaves", leaves);
         request.setAttribute("depts", deptDB.list());
-        request.getRequestDispatcher("../view/leaverequest/list.jsp").forward(request, response);
-
+        request.getRequestDispatcher("../view/management/application_management.jsp").forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
-        processRequest(req, resp, user);
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response, User user)
+            throws ServletException, IOException {
+        processRequest(request, response, user);
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp, User user)
+            throws ServletException, IOException {
+        String action = req.getParameter("action");
+        if ("delete".equals(action)) {
+            int requestId = Integer.parseInt(req.getParameter("requestId"));
+            LeaveRequestDBContext db = new LeaveRequestDBContext();
+            db.deleteRequest(requestId);
+        }
         processRequest(req, resp, user);
     }
+
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
 
 }

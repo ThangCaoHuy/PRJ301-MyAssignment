@@ -18,8 +18,8 @@ import java.util.logging.Logger;
  * @author NITRO 5
  */
 public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
-    
-     @Override
+
+    @Override
     public ArrayList<LeaveRequest> list() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
@@ -66,6 +66,27 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
             }
         }
 
+    }
+
+    public int count() {
+        try {
+            String sql = "SELECT COUNT(*) FROM LeaveRequest";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (connection != null)
+                try {
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(LeaveRequestDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return -1;
     }
 
     public ArrayList<LeaveRequest> getByDept(Integer did) {
@@ -130,6 +151,95 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
         return requests;
     }
 
+    public ArrayList<LeaveRequest> getRequestsByManager(String managerUsername) {
+        ArrayList<LeaveRequest> requests = new ArrayList<>();
+        try {
+            String sql = "SELECT r.rid, r.title, r.reason, r.[from], r.[to], u.username, u.displayname, r.createddate, r.status "
+                    + "FROM LeaveRequest r "
+                    + "JOIN Users u ON u.username = r.createdby "
+                    + "JOIN Employees e ON e.eid = u.eid "
+                    + "WHERE e.managerid = (SELECT eid FROM Users WHERE username = ?)";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, managerUsername);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                LeaveRequest r = new LeaveRequest();
+                r.setId(rs.getInt("rid"));
+                r.setTitle(rs.getString("title"));
+                r.setReason(rs.getString("reason"));
+                r.setFrom(rs.getDate("from"));
+                r.setTo(rs.getDate("to"));
+                r.setCreateddate(rs.getTimestamp("createddate"));
+                r.setStatus(rs.getInt("status"));
+
+                User u = new User();
+                u.setUsername(rs.getString("username"));
+                u.setDisplayname(rs.getString("displayname"));
+                r.setCreatedby(u);
+
+                requests.add(r);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return requests;
+    }
+
+    public void deleteRequest(int requestId) {
+        try {
+            String sql = "DELETE FROM LeaveRequest WHERE rid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, requestId);
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void updateStatus(int requestId, int status) {
+        try {
+            String sql = "UPDATE LeaveRequest SET status = ? WHERE rid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, status);
+            stm.setInt(2, requestId);
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public LeaveRequest getID(int id) {
+        LeaveRequest request = null;
+        try {
+            String sql = "SELECT r.rid, r.title, r.reason, r.[from], r.[to], u.username, u.displayname, r.createddate, r.status "
+                    + "FROM LeaveRequest r "
+                    + "JOIN Users u ON u.username = r.createdby "
+                    + "WHERE r.rid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                request = new LeaveRequest();
+                request.setId(rs.getInt("rid"));
+                request.setTitle(rs.getString("title"));
+                request.setReason(rs.getString("reason"));
+                request.setFrom(rs.getDate("from"));
+                request.setTo(rs.getDate("to"));
+                request.setCreateddate(rs.getTimestamp("createddate"));
+                request.setStatus(rs.getInt("status"));
+
+                User u = new User();
+                u.setUsername(rs.getString("username"));
+                u.setDisplayname(rs.getString("displayname"));
+                request.setCreatedby(u);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return request;
+    }
+
     @Override
     public void update(LeaveRequest model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -139,5 +249,5 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
     public void delete(LeaveRequest model) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
 }

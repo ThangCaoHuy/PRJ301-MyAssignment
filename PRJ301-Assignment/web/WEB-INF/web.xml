@@ -16,6 +16,14 @@
         <servlet-name>WelcomeController</servlet-name>
         <servlet-class>controller.users.WelcomeController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewByDepartmentController</servlet-name>
+        <servlet-class>controller.management.ViewByDepartmentController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BrowseLeaveRequestController</servlet-name>
+        <servlet-class>controller.management.BrowseLeaveRequestController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -31,5 +39,13 @@
     <servlet-mapping>
         <servlet-name>WelcomeController</servlet-name>
         <url-pattern>/welcome</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewByDepartmentController</servlet-name>
+        <url-pattern>/leaverequest/management</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BrowseLeaveRequestController</servlet-name>
+        <url-pattern>/leaverequest/browse</url-pattern>
     </servlet-mapping>
 </web-app>
