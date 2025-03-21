@@ -52,7 +52,7 @@
                 font-weight: bold;
                 align-self: flex-start;
                 margin-bottom: 15px;
-                margin-left: 10%; /* Căn chỉnh theo bảng */
+                margin-left: 10%;
             }
 
             .create-button:hover {
@@ -65,7 +65,7 @@
                 text-align: left;
                 margin-bottom: 30px;
                 align-self: flex-start;
-                margin-left: 10%; /* Căn chỉnh theo bảng */
+                margin-left: 10%;
             }
 
             select {
@@ -118,19 +118,44 @@
                 background: #ffccd5;
                 transition: background 0.3s;
             }
+
+            .action-button {
+                padding: 8px 15px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: bold;
+                margin: 5px;
+            }
+
+            .approve-button {
+                background: #28a745;
+                color: white;
+            }
+
+            .reject-button {
+                background: #dc3545;
+                color: white;
+            }
+
+            .approve-button:hover {
+                background: #218838;
+            }
+
+            .reject-button:hover {
+                background: #c82333;
+            }
         </style>
     </head>
     <body>
+        <h2>Application Management</h2>
         <a href="create" class="create-button">+ Create Application</a> 
         <form id="search" action="findbydept" method="GET">
             <select name="did" onchange="document.getElementById('search').submit();">
                 <option value="-1">---Select All---</option>
-                <c:forEach items="${requestScope.depts}" var="d">
-                    <option
-                        <c:if test="${d.id eq param.did}">
-                            selected="selected"
-                        </c:if>
-                        value="${d.id}">${d.name}</option>
+                <c:forEach items="${depts}" var="d">
+                    <option <c:if test="${d.id eq selectedDeptId}">selected="selected"</c:if> value="${d.id}">${d.name}</option>
                 </c:forEach>
             </select>
         </form>
@@ -145,6 +170,7 @@
                 <td>Created By</td>
                 <td>Created Date</td>
                 <td>Status</td>
+                <td>Action</td> <!-- Cột thêm nút Duyệt/Từ chối -->
             </tr>
             <c:forEach items="${requestScope.leaves}" var="l">
                 <tr>
@@ -155,14 +181,21 @@
                     <td>${l.to}</td>
                     <td>${l.createdby.displayname}</td>
                     <td>${l.createddate}</td>
-                    <td>${l.status eq 0?"In Progress":(l.status eq 1)?"Rejected":"Accepted"}</td>
+                    <td>${l.status eq 0 ? "In Progress" : (l.status eq 1 ? "Rejected" : "Accepted")}</td>
+                    <td>
+                        <form action="findbydept" method="POST">
+                            <input type="hidden" name="requestId" value="${l.id}">
+                            <button type="submit" name="action" value="approve">Approve</button>
+                            <button type="submit" name="action" value="reject">Reject</button>
+                        </form>
+                    </td>
                 </tr>
             </c:forEach>
         </table>
         <div id="botpagger" class="pagger"></div>
         <script>
-            renderPagger('toppagger',${requestScope.pageindex}, 2,${requestScope.totalpage});
-            renderPagger('botpagger',${requestScope.pageindex}, 2,${requestScope.totalpage});
+            renderPagger('toppagger', ${requestScope.pageindex}, 2, ${requestScope.totalpage});
+            renderPagger('botpagger', ${requestScope.pageindex}, 2, ${requestScope.totalpage});
         </script>
     </body>
 </html>

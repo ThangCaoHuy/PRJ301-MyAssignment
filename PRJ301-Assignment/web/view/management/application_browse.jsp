@@ -3,7 +3,7 @@
     Created on : 13 thg 3, 2025, 00:00:28
     Author     : NITRO 5
 --%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -69,6 +69,7 @@
         </style>
     </head>
     <body>
+        <h2>Application Browse</h2>
         <div class="container">
             <div class="title">Leave Request Details</div>
             <div class="detail">
@@ -81,14 +82,20 @@
                     <c:choose>
                         <c:when test="${leaveRequest.status eq 0}">In Progress</c:when>
                         <c:when test="${leaveRequest.status eq 1}">Rejected</c:when>
-                        <c:otherwise>Approved</c:otherwise>
+                        <c:when test="${leaveRequest.status eq 2}">Approved</c:when>
                     </c:choose>
                 </p>
             </div>
-            <div class="buttons">
-                <a href="findbydept?id=${leaveRequest.id}&action=approve" class="btn approve-btn">Approve</a>
-                <a href="findbydept?id=${leaveRequest.id}&action=reject" class="btn reject-btn">Reject</a>
-            </div>
+            <c:if test="${leaveRequest.status eq 0}">
+                <form action="browse" method="POST">
+                    <input type="hidden" name="requestId" value="${leaveRequest.id}">
+                    <div class="buttons">
+                        <button type="submit" name="action" value="approve">Approve</button>
+                        <button type="submit" name="action" value="reject">Reject</button>
+                    </div>
+                </form>
+            </c:if>
         </div>
+
     </body>
 </html>

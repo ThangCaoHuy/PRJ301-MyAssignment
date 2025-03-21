@@ -94,6 +94,7 @@
         <div class="button-container">
             <a href="leaverequest/create" class="button">Create Leave Request</a>
             <a href="leaverequest/findbydept" class="button">Find by Department</a>
+            <a href="leaverequest/management" class="button">Application List Managerment</a>
         </div>
 
         You need to report to ${sessionScope.user.e.manager.name}

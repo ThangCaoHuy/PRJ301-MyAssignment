@@ -70,6 +70,7 @@
         </style>
     </head>
     <body>
+        <h2>Application Create</h2>
         <h1>Hello ${sessionScope.user.displayname}</h1>
         <form action="create" method="POST">
             Title: <input type="text" name="title"/> <br/>

@@ -121,6 +121,7 @@
                 <td>From</td>
                 <td>To</td>
                 <td>Created By</td>
+                <td>Status</td>
                 <td>Action</td>
             </tr>
             <c:forEach items="${requestScope.leaves}" var="l">
@@ -129,6 +130,7 @@
                     <td>${l.from}</td>
                     <td>${l.to}</td>
                     <td>${l.createdby.displayname}</td>
+                    <td>${l.status eq 0 ? "In Progress" : (l.status eq 1 ? "Rejected" : "Accepted")}</td>
                     <td>
                         <a href="browse?id=${l.id}">View</a> | 
                         <form id="deleteForm-${l.id}" action="management" method="POST" style="display:inline;">

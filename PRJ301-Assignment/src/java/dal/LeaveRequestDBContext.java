@@ -198,9 +198,8 @@ public class LeaveRequestDBContext extends DBContext<LeaveRequest> {
     }
 
     public void updateStatus(int requestId, int status) {
-        try {
-            String sql = "UPDATE LeaveRequest SET status = ? WHERE rid = ?";
-            PreparedStatement stm = connection.prepareStatement(sql);
+        String sql = "UPDATE LeaveRequest SET status = ? WHERE rid = ?";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
             stm.setInt(1, status);
             stm.setInt(2, requestId);
             stm.executeUpdate();

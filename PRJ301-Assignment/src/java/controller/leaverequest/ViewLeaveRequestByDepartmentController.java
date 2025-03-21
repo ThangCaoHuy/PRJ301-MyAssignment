@@ -23,46 +23,55 @@ import model.User;
  */
 public class ViewLeaveRequestByDepartmentController extends RequiredAuthenticationBaseController {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response, User user)
             throws ServletException, IOException {
-        int pagesize = 10;
-        String raw_pageindex = request.getParameter("page");
-        if (raw_pageindex == null || raw_pageindex.length() == 0) {
-            raw_pageindex = "1";
-        }
-        int pageindex = Integer.parseInt(raw_pageindex);
-        String did = request.getParameter("did");
 
         LeaveRequestDBContext db = new LeaveRequestDBContext();
         DepartmentDBContext deptDB = new DepartmentDBContext();
+        String managerUsername = user.getUsername();
 
-        Integer id = (did == null || did.length() == 0 || did.equals("-1")) ? null : Integer.parseInt(did);
-        ArrayList<LeaveRequest> leaves = db.getByDept(id);
-        db = new LeaveRequestDBContext();
-        int totalrows = db.count();
-        int totalpage = (totalrows % pagesize == 0) ? totalrows / pagesize : ((totalrows / pagesize) + 1);
+        // Lấy ID phòng ban của Team Leader
+        Integer departmentId = user.getE().getDept().getId();
 
-        request.setAttribute("pageindex", pageindex);
-        request.setAttribute("totalpage", totalpage);
+        // Lấy danh sách đơn nghỉ phép theo manager
+        ArrayList<LeaveRequest> leaves = db.getRequestsByManager(managerUsername);
+
         request.setAttribute("leaves", leaves);
-        request.setAttribute("depts", deptDB.list());
+        request.setAttribute("selectedDeptId", departmentId);
+        request.setAttribute("depts", deptDB.list()); // Trả về danh sách các phòng ban
         request.getRequestDispatcher("../view/leaverequest/list.jsp").forward(request, response);
-
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp, User user) throws ServletException, IOException {
-        processRequest(req, resp, user);
+        String action = req.getParameter("action");
+        String requestIdParam = req.getParameter("requestId");
 
+        if (requestIdParam == null || requestIdParam.trim().isEmpty()) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing requestId");
+            return;
+        }
+
+        int requestId;
+        try {
+            requestId = Integer.parseInt(requestIdParam);
+        } catch (NumberFormatException e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid requestId");
+            return;
+        }
+
+        LeaveRequestDBContext db = new LeaveRequestDBContext();
+
+        if ("approve".equals(action)) {
+            db.updateStatus(requestId, 2); // 2: Accepted
+        } else if ("reject".equals(action)) {
+            db.updateStatus(requestId, 1); // 1: Rejected
+        } else {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
+            return;
+        }
+
+        resp.sendRedirect("findbydept");
     }
 
     @Override
